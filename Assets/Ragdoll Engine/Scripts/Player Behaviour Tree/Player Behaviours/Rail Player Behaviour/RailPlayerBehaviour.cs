@@ -111,7 +111,7 @@ namespace RagdollEngine
                     || Physics.Raycast(playerTransform.position, difference1.normalized, difference1.magnitude, layerMask, QueryTriggerInteraction.Ignore))
                     return;
 
-                float t1 = t + (RB.velocity.magnitude * Mathf.Sign(Vector3.Dot(RB.velocity, pointTangent)) * Time.fixedDeltaTime / railStageObject.splineContainer.CalculateLength());
+                float t1 = t + (RB.linearVelocity.magnitude * Mathf.Sign(Vector3.Dot(RB.linearVelocity, pointTangent)) * Time.fixedDeltaTime / railStageObject.splineContainer.CalculateLength());
 
                 railStageObject.splineContainer.Evaluate(t1, out float3 nearest1, out _, out _);
 
@@ -141,7 +141,7 @@ namespace RagdollEngine
 
                 splineContainer = railStageObject.splineContainer;
 
-                velocity = matrix.c2 * Mathf.Sign(Vector3.Dot(RB.velocity, matrix.c2)) * RB.velocity.magnitude * Time.fixedDeltaTime;
+                velocity = matrix.c2 * Mathf.Sign(Vector3.Dot(RB.linearVelocity, matrix.c2)) * RB.linearVelocity.magnitude * Time.fixedDeltaTime;
             }
 
             if (rail)
@@ -234,7 +234,7 @@ namespace RagdollEngine
 
             matrix.c0 = Vector3.Cross(matrix.c1, matrix.c2);
 
-            velocity = matrix.c2 * Mathf.Sign(Vector3.Dot(RB.velocity, matrix.c2)) * RB.velocity.magnitude * Time.fixedDeltaTime;
+            velocity = matrix.c2 * Mathf.Sign(Vector3.Dot(RB.linearVelocity, matrix.c2)) * RB.linearVelocity.magnitude * Time.fixedDeltaTime;
 
             active = true;
 

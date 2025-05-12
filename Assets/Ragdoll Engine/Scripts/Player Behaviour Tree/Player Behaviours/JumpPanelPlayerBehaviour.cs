@@ -12,12 +12,12 @@ namespace RagdollEngine
             {
                 JumpPanelStageObject jumpPanelStageObject = groundInformation.hit.collider.GetComponentInParent<JumpPanelStageObject>();
 
-                if (!jumpPanelStageObject || Vector3.Dot(RB.velocity, jumpPanelStageObject.transform.forward) < jumpPanelDeadzone) return false;
+                if (!jumpPanelStageObject || Vector3.Dot(RB.linearVelocity, jumpPanelStageObject.transform.forward) < jumpPanelDeadzone) return false;
 
                 playerBehaviourTree.groundInformation.ground = true;
 
-                additiveVelocity = -RB.velocity
-                    + (Quaternion.AngleAxis(jumpPanelStageObject.angle, -jumpPanelStageObject.transform.right) * jumpPanelStageObject.transform.forward * Mathf.Max(jumpPanelStageObject.speed, Vector3.Dot(RB.velocity, jumpPanelStageObject.transform.forward)));
+                additiveVelocity = -RB.linearVelocity
+                    + (Quaternion.AngleAxis(jumpPanelStageObject.angle, -jumpPanelStageObject.transform.right) * jumpPanelStageObject.transform.forward * Mathf.Max(jumpPanelStageObject.speed, Vector3.Dot(RB.linearVelocity, jumpPanelStageObject.transform.forward)));
 
                 if (wasActive) return true;
 

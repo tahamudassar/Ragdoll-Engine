@@ -17,7 +17,7 @@ namespace RagdollEngine
             dashRing = active
                 || (dashRing
                     && !groundInformation.ground
-                    && RB.velocity.y >= 0);
+                    && RB.linearVelocity.y >= 0);
 
             animator.SetBool("Dash Ringing", dashRing);
         }
@@ -38,7 +38,7 @@ namespace RagdollEngine
 
             overrideModelTransform = true;
 
-            currentLength = Mathf.Max(currentLength - (Mathf.Lerp(dashRingStageObject.speed, speed, Vector3.Dot(RB.velocity, dashRingStageObject.transform.forward) > 0 ? RB.velocity.magnitude : 0) * Time.fixedDeltaTime), 0);
+            currentLength = Mathf.Max(currentLength - (Mathf.Lerp(dashRingStageObject.speed, speed, Vector3.Dot(RB.linearVelocity, dashRingStageObject.transform.forward) > 0 ? RB.linearVelocity.magnitude : 0) * Time.fixedDeltaTime), 0);
 
             if (currentLength <= 0)
                 return false;
@@ -68,12 +68,12 @@ namespace RagdollEngine
 
                     speed = wasActive
                         ? Mathf.Max(dashRingStageObject.speed, speed)
-                        : Vector3.Dot(RB.velocity, dashRingStageObject.transform.forward) > 0
-                            ? Mathf.Max(dashRingStageObject.speed, RB.velocity.magnitude)
+                        : Vector3.Dot(RB.linearVelocity, dashRingStageObject.transform.forward) > 0
+                            ? Mathf.Max(dashRingStageObject.speed, RB.linearVelocity.magnitude)
                             : dashRingStageObject.speed;
 
-                    additiveVelocity = -RB.velocity
-                        + thisStageObject.transform.forward * (Vector3.Dot(RB.velocity, thisStageObject.transform.forward) > 0 ? Mathf.Max(dashRingStageObject.speed, RB.velocity.magnitude) : dashRingStageObject.speed);
+                    additiveVelocity = -RB.linearVelocity
+                        + thisStageObject.transform.forward * (Vector3.Dot(RB.linearVelocity, thisStageObject.transform.forward) > 0 ? Mathf.Max(dashRingStageObject.speed, RB.linearVelocity.magnitude) : dashRingStageObject.speed);
 
                     animator.SetTrigger("Dash Ring");
 

@@ -16,9 +16,9 @@ namespace RagdollEngine
 
         public override void OnTarget(PlayerBehaviourTree playerBehaviourTree)
         {
-            playerBehaviourTree.RB.velocity = new Vector3(playerBehaviourTree.RB.velocity.x,
+            playerBehaviourTree.RB.linearVelocity = new Vector3(playerBehaviourTree.RB.linearVelocity.x,
                 bounciness,
-                playerBehaviourTree.RB.velocity.z);
+                playerBehaviourTree.RB.linearVelocity.z);
 
             balloonEntity.Break(playerBehaviourTree);
         }

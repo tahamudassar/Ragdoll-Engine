@@ -119,8 +119,8 @@ namespace RagdollEngine
 
         public void Jump(Vector3 normal, bool groundJump)
         {
-            additiveVelocity = -Vector3.Project(RB.velocity, normal)
-                + (normal * Mathf.Max(groundJump ? baseJumpForce : airJumpForce, Vector3.Dot(RB.velocity, normal)));
+            additiveVelocity = -Vector3.Project(RB.linearVelocity, normal)
+                + (normal * Mathf.Max(groundJump ? baseJumpForce : airJumpForce, Vector3.Dot(RB.linearVelocity, normal)));
 
             if (groundJump)
             {

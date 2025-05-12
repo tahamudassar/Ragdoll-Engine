@@ -98,7 +98,7 @@ namespace RagdollEngine
 
             movePosition = RB.position;
 
-            moveVelocity = Vector3.ProjectOnPlane(RB.velocity, playerTransform.up);
+            moveVelocity = Vector3.ProjectOnPlane(RB.linearVelocity, playerTransform.up);
 
             accelerationVector = Vector3.zero;
 
@@ -124,16 +124,16 @@ namespace RagdollEngine
             {
                 additiveVelocity += accelerationVector;
 
-                RB.velocity += additiveVelocity;
+                RB.linearVelocity += additiveVelocity;
 
-                RB.velocity -= Vector3.Project(RB.velocity, plane);
+                RB.linearVelocity -= Vector3.Project(RB.linearVelocity, plane);
 
                 if (groundInformation.ground)
-                    RB.velocity -= Vector3.Project(RB.velocity, groundInformation.hit.normal);
+                    RB.linearVelocity -= Vector3.Project(RB.linearVelocity, groundInformation.hit.normal);
             }
 
             if (dynamicSolverIterations)
-                RB.solverIterations = Mathf.Max(Mathf.FloorToInt(RB.velocity.magnitude * Time.fixedDeltaTime / solverIterationDistance), Physics.defaultSolverIterations);
+                RB.solverIterations = Mathf.Max(Mathf.FloorToInt(RB.linearVelocity.magnitude * Time.fixedDeltaTime / solverIterationDistance), Physics.defaultSolverIterations);
             else
                 RB.solverIterations = Physics.defaultSolverIterations;
         }

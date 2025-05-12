@@ -97,9 +97,9 @@ namespace RagdollEngine
 
             if (transition <= 0 && look.magnitude == 0)
             {
-                float followPercent = Mathf.Min(RB.velocity.magnitude / maxFollowSpeed, 1);
+                float followPercent = Mathf.Min(RB.linearVelocity.magnitude / maxFollowSpeed, 1);
 
-                look.x += Vector3.Dot(Vector3.ProjectOnPlane(cameraTransform.right, normal).normalized, RB.velocity.normalized) * followPercent * followIntensity.x;
+                look.x += Vector3.Dot(Vector3.ProjectOnPlane(cameraTransform.right, normal).normalized, RB.linearVelocity.normalized) * followPercent * followIntensity.x;
 
                 look.y += Mathf.Max((Vector3.Dot(cameraTransform.up, normal) + defaultRotation.y) * followPercent * followIntensity.y, Mathf.Min(-lookRotation.y, 0));
             }

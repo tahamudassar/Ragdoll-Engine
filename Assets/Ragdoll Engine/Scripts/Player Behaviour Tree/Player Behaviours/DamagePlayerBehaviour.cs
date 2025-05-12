@@ -84,7 +84,7 @@ namespace RagdollEngine
             if (!knockback || knockbackTimer < 0)
             {
                 if (groundInformation.ground)
-                    additiveVelocity = -RB.velocity;
+                    additiveVelocity = -RB.linearVelocity;
 
                 return;
             }
@@ -96,7 +96,7 @@ namespace RagdollEngine
                 return;
             }
 
-            additiveVelocity = -RB.velocity
+            additiveVelocity = -RB.linearVelocity
                 + (knockbackDirection * knockbackDistance / knockbackTime);
         }
 
@@ -115,7 +115,7 @@ namespace RagdollEngine
 
                     break;
                 case DamageMode.Stumble:
-                    if (RB.velocity.magnitude < minStumbleSpeed || !groundInformation.ground)
+                    if (RB.linearVelocity.magnitude < minStumbleSpeed || !groundInformation.ground)
                     {
                         animationTimer = 0;
 
@@ -152,7 +152,7 @@ namespace RagdollEngine
 
                             cooldownTimer = cooldownTime;
 
-                            knockbackDirection = Vector3.ProjectOnPlane(-RB.velocity, Vector3.up).normalized;
+                            knockbackDirection = Vector3.ProjectOnPlane(-RB.linearVelocity, Vector3.up).normalized;
 
                             if (knockbackDirection.magnitude == 0)
                                 knockbackDirection = -modelTransform.forward;
@@ -169,7 +169,7 @@ namespace RagdollEngine
 
                             break;
                         default:
-                            if (wasDamageCheck || RB.velocity.magnitude < minStumbleSpeed)
+                            if (wasDamageCheck || RB.linearVelocity.magnitude < minStumbleSpeed)
                             {
                                 damageCheck = true;
 
@@ -186,7 +186,7 @@ namespace RagdollEngine
 
                             stumbling = true;
 
-                            additiveVelocity = -RB.velocity * (1 - stumbleSpeedMultiplier);
+                            additiveVelocity = -RB.linearVelocity * (1 - stumbleSpeedMultiplier);
 
                             audioSource.PlayOneShot(stumbleAudioClip);
 

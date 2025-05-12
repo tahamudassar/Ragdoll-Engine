@@ -51,7 +51,7 @@ namespace RagdollEngine
 
             boosting = ((inputHandler.boost.pressed && groundInformation.ground)
                     || ((boosting || wasBoost) && inputHandler.boost.hold))
-                && (!boosting || RB.velocity.magnitude >= boostDeadzone);
+                && (!boosting || RB.linearVelocity.magnitude >= boostDeadzone);
 
             if (!currentBoostUI && boostPercent > 0)
             {

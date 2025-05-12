@@ -17,7 +17,7 @@ namespace RagdollEngine
             spring = active
                 || (spring
                     && !groundInformation.ground
-                    && RB.velocity.y >= 0);
+                    && RB.linearVelocity.y >= 0);
 
             animator.SetBool("Springing", spring);
         }
@@ -38,7 +38,7 @@ namespace RagdollEngine
 
             overrideModelTransform = true;
 
-            currentLength = Mathf.Max(currentLength - (Mathf.Lerp(springStageObject.speed, speed, Vector3.Dot(RB.velocity, springStageObject.transform.up) > 0 ? RB.velocity.magnitude : 0) * Time.fixedDeltaTime), 0);
+            currentLength = Mathf.Max(currentLength - (Mathf.Lerp(springStageObject.speed, speed, Vector3.Dot(RB.linearVelocity, springStageObject.transform.up) > 0 ? RB.linearVelocity.magnitude : 0) * Time.fixedDeltaTime), 0);
 
             if (currentLength <= 0)
                 return false;
@@ -68,12 +68,12 @@ namespace RagdollEngine
 
                     speed = wasActive
                         ? Mathf.Max(springStageObject.speed, speed)
-                        : Vector3.Dot(RB.velocity, springStageObject.transform.up) > 0
-                            ? Mathf.Max(springStageObject.speed, RB.velocity.magnitude)
+                        : Vector3.Dot(RB.linearVelocity, springStageObject.transform.up) > 0
+                            ? Mathf.Max(springStageObject.speed, RB.linearVelocity.magnitude)
                             : springStageObject.speed;
 
-                    additiveVelocity = -RB.velocity
-                        + thisStageObject.transform.up * (Vector3.Dot(RB.velocity, thisStageObject.transform.up) > 0 ? Mathf.Max(springStageObject.speed, RB.velocity.magnitude) : springStageObject.speed);
+                    additiveVelocity = -RB.linearVelocity
+                        + thisStageObject.transform.up * (Vector3.Dot(RB.linearVelocity, thisStageObject.transform.up) > 0 ? Mathf.Max(springStageObject.speed, RB.linearVelocity.magnitude) : springStageObject.speed);
 
                     animator.SetTrigger("Spring");
 

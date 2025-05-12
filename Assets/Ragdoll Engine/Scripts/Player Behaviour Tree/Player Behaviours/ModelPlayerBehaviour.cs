@@ -27,14 +27,14 @@ namespace RagdollEngine
             {
                 animator.SetFloat("Speed", speed);
 
-                animator.SetFloat("World Speed", RB.velocity.magnitude);
+                animator.SetFloat("World Speed", RB.linearVelocity.magnitude);
 
                 animator.SetFloat("Speed Percent", Mathf.Clamp01(speed / maxSpeed));
             }
 
-            animator.SetFloat("Vertical Velocity", Vector3.Dot(RB.velocity, playerTransform.up));
+            animator.SetFloat("Vertical Velocity", Vector3.Dot(RB.linearVelocity, playerTransform.up));
 
-            float angle = Vector3.SignedAngle(modelTransform.forward, RB.velocity, playerTransform.up) / turnAngle;
+            float angle = Vector3.SignedAngle(modelTransform.forward, RB.linearVelocity, playerTransform.up) / turnAngle;
 
             float moveDirection = (1 - Mathf.Pow(10, -Mathf.Abs(angle))) * Mathf.Sign(angle);
 

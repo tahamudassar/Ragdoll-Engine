@@ -14,9 +14,9 @@ namespace RagdollEngine
         {
             Collider[] theseColliders = new Collider[0];
 
-            Vector3 oldPosition = playerTransform.position - (RB.velocity * Time.fixedDeltaTime);
+            Vector3 oldPosition = playerTransform.position - (RB.linearVelocity * Time.fixedDeltaTime);
 
-            int resolution = Mathf.Max(Mathf.FloorToInt(RB.velocity.magnitude * Time.fixedDeltaTime / minOverlapDistance), 1);
+            int resolution = Mathf.Max(Mathf.FloorToInt(RB.linearVelocity.magnitude * Time.fixedDeltaTime / minOverlapDistance), 1);
 
             for (int i = 1; i < resolution + 1; i++)
             {

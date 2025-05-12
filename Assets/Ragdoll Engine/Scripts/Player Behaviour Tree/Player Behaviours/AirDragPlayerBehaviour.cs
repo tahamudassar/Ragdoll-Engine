@@ -8,7 +8,7 @@ namespace RagdollEngine
 
         public override void Execute()
         {
-            additiveVelocity -= RB.velocity * airDrag;
+            additiveVelocity -= RB.linearVelocity * airDrag;
         }
     }
 }

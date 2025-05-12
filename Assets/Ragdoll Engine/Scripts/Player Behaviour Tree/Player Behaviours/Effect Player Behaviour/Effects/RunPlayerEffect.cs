@@ -16,10 +16,10 @@ namespace RagdollEngine
             {
                 ParticleSystem.MainModule mainModule = thisParticleSystem.main;
 
-                mainModule.startSpeed = Vector3.Dot(RB.velocity, thisParticleSystem.transform.forward) - (RB.velocity.magnitude * dustKickSpeedRatio);
+                mainModule.startSpeed = Vector3.Dot(RB.linearVelocity, thisParticleSystem.transform.forward) - (RB.linearVelocity.magnitude * dustKickSpeedRatio);
             }
 
-            return RB.velocity.magnitude > speed && groundInformation.ground;
+            return RB.linearVelocity.magnitude > speed && groundInformation.ground;
         }
     }
 }

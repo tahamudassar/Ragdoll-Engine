@@ -34,11 +34,11 @@ namespace RagdollEngine
         public override void Execute()
         {
             if (braking)
-                braking = wasActive && groundInformation.ground && RB.velocity.magnitude > moveDeadzone;
+                braking = wasActive && groundInformation.ground && RB.linearVelocity.magnitude > moveDeadzone;
 
             if (!braking)
             {
-                braking = groundInformation.ground && RB.velocity.magnitude > minBrakeSpeed && moving && Vector3.Dot(accelerationVector.normalized, RB.velocity.normalized) < 0;
+                braking = groundInformation.ground && RB.linearVelocity.magnitude > minBrakeSpeed && moving && Vector3.Dot(accelerationVector.normalized, RB.linearVelocity.normalized) < 0;
 
                 if (braking)
                     animator.SetTrigger("Brake");

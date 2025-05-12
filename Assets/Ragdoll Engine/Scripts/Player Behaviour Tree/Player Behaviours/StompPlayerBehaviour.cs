@@ -44,7 +44,7 @@ namespace RagdollEngine
 
         public override void Execute()
         {
-            additiveVelocity = -RB.velocity
+            additiveVelocity = -RB.linearVelocity
                 + (-Vector3.up * Mathf.Lerp(minStompForce, maxStompForce, 1 - Mathf.Pow(10, -(1 - (stompAccelerationTimer / stompAccelerationTime)))));
         }
     }

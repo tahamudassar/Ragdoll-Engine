@@ -15,8 +15,8 @@ namespace RagdollEngine
             bool dashPanel = DashPanelCheck();
 
             if (dashPanel)
-                additiveVelocity = -RB.velocity
-                        + (dashPanelStageObject.transform.forward * Mathf.Max(dashPanelStageObject.speed, Vector3.Dot(RB.velocity, dashPanelStageObject.transform.forward)));
+                additiveVelocity = -RB.linearVelocity
+                        + (dashPanelStageObject.transform.forward * Mathf.Max(dashPanelStageObject.speed, Vector3.Dot(RB.linearVelocity, dashPanelStageObject.transform.forward)));
 
             return dashPanel;
         }

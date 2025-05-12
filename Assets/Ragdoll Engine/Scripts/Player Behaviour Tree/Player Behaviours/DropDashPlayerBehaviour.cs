@@ -29,7 +29,7 @@ public class DropDashPlayerBehaviour : PlayerBehaviour
     public override void Execute()
     {
         if (groundInformation.enter)
-            additiveVelocity = -RB.velocity
-                + (Vector3.ProjectOnPlane(modelTransform.forward, groundInformation.hit.normal).normalized * Mathf.Max(RB.velocity.magnitude, Mathf.Lerp(minSpeed, maxSpeed, 1 - Mathf.Clamp01(chargeTimer / chargeTime))));
+            additiveVelocity = -RB.linearVelocity
+                + (Vector3.ProjectOnPlane(modelTransform.forward, groundInformation.hit.normal).normalized * Mathf.Max(RB.linearVelocity.magnitude, Mathf.Lerp(minSpeed, maxSpeed, 1 - Mathf.Clamp01(chargeTimer / chargeTime))));
     }
 }

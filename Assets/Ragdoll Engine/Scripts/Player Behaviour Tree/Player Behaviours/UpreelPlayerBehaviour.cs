@@ -24,7 +24,7 @@ namespace RagdollEngine
 
                     animator.SetBool("Upreeling", false);
 
-                    additiveVelocity = -RB.velocity
+                    additiveVelocity = -RB.linearVelocity
                         + (Vector3.up * upreelStageObject.retractionSpeed);
 
                     return false;

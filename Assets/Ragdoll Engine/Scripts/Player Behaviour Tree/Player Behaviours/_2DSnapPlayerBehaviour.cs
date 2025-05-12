@@ -48,7 +48,7 @@ namespace RagdollEngine
                 transition = transitionTime;
             }
 
-            float t = Mathf.Max(transition - (RB.velocity.magnitude * Time.fixedDeltaTime * Time.fixedDeltaTime), 0);
+            float t = Mathf.Max(transition - (RB.linearVelocity.magnitude * Time.fixedDeltaTime * Time.fixedDeltaTime), 0);
 
             Vector3 goal = Vector3.Lerp(playerTransform.position - Vector3.Project(playerTransform.position - oldPosition, matrix.c0),
                 playerTransform.position - Vector3.Project(playerTransform.position - position, matrix.c0),
