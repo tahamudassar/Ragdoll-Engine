@@ -93,7 +93,9 @@ public class Player : MonoBehaviour
                 break;
             case "Zoom":
                 inputHandler.zoom.Set(callbackContext.ReadValue<float>());
-
+                break;
+            case "Dash":
+                inputHandler.dash.Set(callbackContext.ReadValue<float>());
                 break;
         }
     }

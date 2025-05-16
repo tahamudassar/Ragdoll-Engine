@@ -36,7 +36,7 @@
                     "name": "Start",
                     "type": "Button",
                     "id": "088f1d34-159b-44b2-9266-f34d0b1b49cd",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -72,7 +72,7 @@
                     "name": "Stomp",
                     "type": "Button",
                     "id": "02289cc4-2226-46b4-9c27-8c39f64a9991",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -127,6 +127,15 @@
                     "type": "PassThrough",
                     "id": "709e36c2-68bc-49ee-a667-7ec2a1f88290",
                     "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "97e38022-c1a5-4fd2-8b91-be852a053c70",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -493,6 +502,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Cyloop",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a89f9879-6447-44e8-becf-42f55153cc26",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

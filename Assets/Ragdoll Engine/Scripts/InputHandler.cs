@@ -26,6 +26,7 @@ namespace RagdollEngine
         public Button cyloop = new Button();
 
         public Button attack = new Button();
+        public Button dash = new Button();
 
         public Button sidestep = new Button();
 
