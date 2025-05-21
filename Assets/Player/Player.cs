@@ -97,6 +97,9 @@ public class Player : MonoBehaviour
             case "Dash":
                 inputHandler.dash.Set(callbackContext.ReadValue<float>());
                 break;
+            case "Fire":
+                inputHandler.fire.Set(callbackContext.ReadValue<float>());
+                break;
         }
     }
 }

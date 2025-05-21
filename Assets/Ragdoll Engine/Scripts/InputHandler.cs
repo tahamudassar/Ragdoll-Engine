@@ -33,6 +33,7 @@ namespace RagdollEngine
         public Button zoomDelta = new Button();
 
         public Button zoom = new Button();
+        public Button fire = new Button();
 
         public class Button
         {
