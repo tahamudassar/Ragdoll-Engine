@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 namespace RagdollEngine
@@ -9,11 +10,12 @@ namespace RagdollEngine
         [SerializeField] float minStompForce;
 
         [SerializeField] float maxStompForce;
+        [SerializeField] float bounceMult = 10f;
 
         [SerializeField] float stompAccelerationTime;
 
         float stompAccelerationTimer;
-
+        bool bounced = false;
         void LateUpdate()
         {
             animator.SetBool("Stomping", active);
@@ -25,7 +27,7 @@ namespace RagdollEngine
         public override bool Evaluate()
         {
             bool stomping = (inputHandler.stomp.pressed || wasActive) && !groundInformation.ground;
-                
+            bool ground = groundInformation.ground;
 
             if (stomping)
             {
@@ -37,15 +39,25 @@ namespace RagdollEngine
 
                     animator.SetTrigger("Stomp");
                 }
+                bounced = false;
             }
-
+            else if (ground && !bounced && wasActive)
+            {
+                additiveVelocity = -RB.linearVelocity + playerTransform.up * bounceMult;
+                accelerationVector = Vector3.zero;
+                stickToGround = false;
+                bounced = true;
+            }
             return stomping;
         }
 
         public override void Execute()
         {
-            additiveVelocity = -RB.linearVelocity
-                + (-Vector3.up * Mathf.Lerp(minStompForce, maxStompForce, 1 - Mathf.Pow(10, -(1 - (stompAccelerationTimer / stompAccelerationTime)))));
+            if (!bounced)
+            {
+                additiveVelocity = -RB.linearVelocity
+                    + (-Vector3.up * Mathf.Lerp(minStompForce, maxStompForce, 1 - Mathf.Pow(10, -(1 - (stompAccelerationTimer / stompAccelerationTime)))));
+            }
         }
     }
 }

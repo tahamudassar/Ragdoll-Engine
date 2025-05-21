@@ -19,7 +19,7 @@ namespace RagdollEngine
                     && !groundInformation.ground
                     && RB.linearVelocity.magnitude >= 0);
 
-            animator.SetBool("Dashing", dashing);
+           
         }
 
         public override bool Evaluate()

@@ -72,6 +72,7 @@ namespace RagdollEngine
 
         [HideInInspector] public bool initialized;
 
+        [HideInInspector] public bool stickToGround = true;
         public struct GroundInformation
         {
             public RaycastHit hit;
@@ -108,6 +109,8 @@ namespace RagdollEngine
 
             respawnTrigger = false;
 
+            stickToGround = true;
+            
             moving = false;
 
             RB.isKinematic = false;
@@ -123,12 +126,10 @@ namespace RagdollEngine
             else
             {
                 additiveVelocity += accelerationVector;
-
                 RB.linearVelocity += additiveVelocity;
-
                 RB.linearVelocity -= Vector3.Project(RB.linearVelocity, plane);
 
-                if (groundInformation.ground)
+                if (groundInformation.ground && stickToGround)
                     RB.linearVelocity -= Vector3.Project(RB.linearVelocity, groundInformation.hit.normal);
             }
 
@@ -195,7 +196,11 @@ namespace RagdollEngine
             get => playerBehaviourTree.additiveVelocity;
             set => playerBehaviourTree.additiveVelocity = value;
         }
-
+        public bool stickToGround
+        {
+            get => playerBehaviourTree.stickToGround;
+            set => playerBehaviourTree.stickToGround = value;
+        }
         public Vector3 movePosition
         {
             get => playerBehaviourTree.movePosition;
