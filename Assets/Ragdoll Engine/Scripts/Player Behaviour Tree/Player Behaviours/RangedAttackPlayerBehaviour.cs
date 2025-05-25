@@ -25,28 +25,29 @@ namespace RagdollEngine
         private Vector3 launchVector;
 
         public Action OnFire;
-        bool aiming;
 
-        private void Start()
-        {
-            
-        }
 
-        public override void Execute()
+        public override bool Evaluate()
         {
 
-            CalculatePath();
-            //If user has left clicked then fire and start cooldown
-            if (inputHandler.fire.pressed && cooldownTimer <= 0)
-            {
-                //Fire the projectile
-                FireProjectile();
-                cooldownTimer = cooldown;
-            }
             if (cooldownTimer > 0)
             {
                 cooldownTimer -= Time.deltaTime;
             }
+            if (inputHandler.fire.hold)
+            {
+                CalculatePath();
+                return true;
+            }
+            else if (inputHandler.fire.released && cooldownTimer <= 0)
+            {
+                CalculatePath();
+                //Fire the projectile
+                FireProjectile();
+                cooldownTimer = cooldown;
+                return true;
+            }
+            return false;
 
         }
 
@@ -60,8 +61,8 @@ namespace RagdollEngine
             projectile.GetComponent<SetProjectileGravity>().SetGravityScale(projectileSpeed * projectileSpeed);
             if (rb != null)
             {
-                rb.linearVelocity = launchVector;
-                rb.angularVelocity = launchVector;
+                rb.linearVelocity = RB.linearVelocity+launchVector;
+                rb.angularVelocity = RB.angularVelocity+launchVector;
             }
         }
 
@@ -82,23 +83,22 @@ namespace RagdollEngine
                     points.Add(hit.point);
                     break;
                 }
+
             }
         }
 
         private void SetLaunchVector()
         {
-            Vector3 cameraForward = cameraTransform.forward;
             Vector3 playerForward = modelTransform.forward;
-            float verticalAngle = Vector3.SignedAngle(Vector3.ProjectOnPlane(cameraForward, modelTransform.right), playerForward, modelTransform.right);
             //Invert the angle to make it positive
-            verticalAngle = -verticalAngle;
+            float verticalAngle = angleOffset;
             verticalAngle *= angleMultipler;
-            verticalAngle += angleOffset;
             // Adjust the throw direction based on the vertical angle
             Vector3 adjustedThrowDirection = Quaternion.AngleAxis(verticalAngle, modelTransform.right) * modelTransform.forward;
 
             launchOrigin = modelTransform.position + (modelTransform.rotation * offsetVector);
             launchVector = adjustedThrowDirection * throwForce * projectileSpeed;
+           
         }
 
         private void SetPoints()
@@ -114,8 +114,9 @@ namespace RagdollEngine
             for (int i = 0; i < maxPoints; i++)
             {
                 float t = i * scale;
-               Vector3 position = launchOrigin + (launchVector * t) + (gravity * t * t / 2);
+                Vector3 position = launchOrigin + (launchVector * t) + (gravity * t * t / 2);
                 points.Add(position);
+                
             }
         }
         public List<Vector3> getPoints()

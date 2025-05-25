@@ -28,7 +28,7 @@ public class AimingVisual : MonoBehaviour
                     {
                         aimTarget.SetActive(false);
                     }
-                        lineRenderer.positionCount = points.Count;
+                    lineRenderer.positionCount = points.Count;
                     for (int i = 0; i < points.Count; i++)
                     {
                         lineRenderer.SetPosition(i, points[i]);

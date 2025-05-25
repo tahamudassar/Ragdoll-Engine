@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.VFX;
 
 namespace RagdollEngine
 {
@@ -25,6 +26,8 @@ namespace RagdollEngine
         public GameObject[] gameObjects;
 
         public ParticleSystem[] particleSystems;
+
+        public VisualEffect[] visualEffects;
 
         public TrailRenderer[] trailRenderers;
 
@@ -74,7 +77,11 @@ namespace RagdollEngine
 
                 emissionModule.enabled = value;
             }
-
+            foreach (VisualEffect thisVisualEffect in visualEffects)
+            {
+                if (value)
+                    thisVisualEffect.Play();
+            }
             foreach (TrailRenderer thisTrailRenderer in trailRenderers)
                 thisTrailRenderer.emitting = value;
         }
