@@ -79,9 +79,8 @@ public class Player : MonoBehaviour
                 inputHandler.cyloop.Set(callbackContext.ReadValue<float>());
 
                 break;
-            case "Attack":
-                inputHandler.attack.Set(callbackContext.ReadValue<float>());
-
+            case "Homing Attack":
+                inputHandler.homingAttack.Set(callbackContext.ReadValue<float>());
                 break;
             case "Sidestep":
                 inputHandler.sidestep.Set(callbackContext.ReadValue<float>());
@@ -99,6 +98,9 @@ public class Player : MonoBehaviour
                 break;
             case "Fire":
                 inputHandler.fire.Set(callbackContext.ReadValue<float>());
+                break;
+            case "Melee":
+                inputHandler.melee.Set(callbackContext.ReadValue<float>());
                 break;
         }
     }

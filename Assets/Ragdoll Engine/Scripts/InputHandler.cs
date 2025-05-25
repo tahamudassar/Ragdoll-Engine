@@ -25,7 +25,7 @@ namespace RagdollEngine
 
         public Button cyloop = new Button();
 
-        public Button attack = new Button();
+        public Button homingAttack = new Button();
         public Button dash = new Button();
 
         public Button sidestep = new Button();
@@ -34,6 +34,7 @@ namespace RagdollEngine
 
         public Button zoom = new Button();
         public Button fire = new Button();
+        public Button melee = new Button();
 
         public class Button
         {

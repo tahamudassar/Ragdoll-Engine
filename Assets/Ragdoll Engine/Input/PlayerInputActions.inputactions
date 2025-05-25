@@ -96,10 +96,10 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
+                    "name": "Homing Attack",
                     "type": "Button",
                     "id": "db11b7d5-bc8d-44d0-9c58-92a9625f3000",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -144,6 +144,15 @@
                     "name": "Fire",
                     "type": "Button",
                     "id": "4a275988-4122-4477-8dd2-2750b73a29a1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Melee",
+                    "type": "Button",
+                    "id": "be0b3abc-2635-43e4-8283-476e50262014",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -422,7 +431,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard & Mouse",
-                    "action": "Attack",
+                    "action": "Homing Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -433,7 +442,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
-                    "action": "Attack",
+                    "action": "Homing Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -522,6 +531,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "523662b0-b10c-49c6-a5ce-dd26020d6260",
+                    "path": "<Keyboard>/v",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Melee",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

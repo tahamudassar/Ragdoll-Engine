@@ -19,7 +19,7 @@ namespace RagdollEngine
             {
                 cooldownTimer -= Time.deltaTime;
             }
-            if (inputHandler.attack.pressed && cooldownTimer <= 0)
+            if (inputHandler.melee.pressed && cooldownTimer <= 0)
             {
                 //Attack
                 Attack();

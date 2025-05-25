@@ -1,97 +1,150 @@
-Shader "Ragdoll Engine/Specular"
+Shader "Ragdoll Engine/Specular (URP)"
 {
     Properties
     {
-        _MainTex ("Color Texture", 2D) = "white" {}
-
+        [MainTexture] _MainTex ("Color Texture", 2D) = "white" {}
         _SpecularTexture ("Specular Texture", 2D) = "white" {}
-
-        _NormalTexture ("Normal Texture", 2D) = "white" {}
-
+        [Normal] _NormalTexture ("Normal Texture", 2D) = "bump" {}
         _NormalStrength ("Normal Strength", Range(0, 1)) = 0
-
         _FalloffTexture ("Falloff Texture", 2D) = "white" {}
-
         _FresnelPower ("Fresnel Power", Float) = 5
-
         _FresnelStrength ("Fresnel Strength", Float) = 0
     }
+
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
 
-        LOD 200
-
-        CGPROGRAM
-
-        #pragma surface surf StandardSpecular fullforwardshadows
-
-        #pragma target 3.0
-
-        sampler2D _MainTex;
-
-        sampler2D _SpecularTexture;
-
-        sampler2D _NormalTexture;
-
-        sampler2D _FalloffTexture;
-
-        struct Input
+        Pass
         {
-            float3 worldPos;
+            Name "ForwardLit"
+            Tags { "LightMode" = "UniversalForward" }
 
-            float3 worldNormal;
+            HLSLPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 
-            float2 uv_MainTex; INTERNAL_DATA
-        };
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS
+            #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
+            #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
+            #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT
 
-        half _NormalStrength;
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
-        half _FresnelPower;
+            struct Attributes
+            {
+                float4 positionOS   : POSITION;
+                float3 normalOS     : NORMAL;
+                float4 tangentOS    : TANGENT;
+                float2 uv           : TEXCOORD0;
+            };
 
-        half _FresnelStrength;
+            struct Varyings
+            {
+                float2 uv           : TEXCOORD0;
+                float3 positionWS   : TEXCOORD1;
+                float3 normalWS     : TEXCOORD2;
+                float4 tangentWS    : TEXCOORD3;
+                float3 viewDirWS    : TEXCOORD4;
+                float3 vertexSH     : TEXCOORD5;
+                float4 positionCS   : SV_POSITION;
+            };
 
-        UNITY_INSTANCING_BUFFER_START(Props)
-        UNITY_INSTANCING_BUFFER_END(Props)
+            TEXTURE2D(_MainTex);
+            TEXTURE2D(_SpecularTexture);
+            TEXTURE2D(_NormalTexture);
+            TEXTURE2D(_FalloffTexture);
+            SAMPLER(sampler_MainTex);
 
-        void surf (Input IN, inout SurfaceOutputStandardSpecular o)
-        {
-            // Base Color
-            fixed4 albedo = tex2D(_MainTex, IN.uv_MainTex);
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                half _NormalStrength;
+                half _FresnelPower;
+                half _FresnelStrength;
+            CBUFFER_END
 
-            // Specular
-            fixed4 specular = tex2D(_SpecularTexture, IN.uv_MainTex);
+            Varyings vert(Attributes input)
+            {
+                Varyings output;
+                VertexPositionInputs positionInputs = GetVertexPositionInputs(input.positionOS.xyz);
+                output.positionCS = positionInputs.positionCS;
+                output.positionWS = positionInputs.positionWS;
 
-            specular.rgb = specular;
+                VertexNormalInputs normalInputs = GetVertexNormalInputs(input.normalOS, input.tangentOS);
+                output.normalWS = normalInputs.normalWS;
+                output.tangentWS = float4(normalInputs.tangentWS, input.tangentOS.w);
 
-            // Smoothness
-            float smoothness = specular.a;
+                output.viewDirWS = GetWorldSpaceNormalizeViewDir(positionInputs.positionWS);
+                output.uv = TRANSFORM_TEX(input.uv, _MainTex);
+                output.vertexSH = SampleSHVertex(input.normalOS);
 
-            // Normal
-            float3 normal = UnpackNormal(tex2D(_NormalTexture, IN.uv_MainTex));
+                return output;
+            }
 
-            normal.xy *= _NormalStrength;
+            half4 frag(Varyings input) : SV_Target
+            {
+                // Albedo
+                half4 albedo = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
 
-            normal.z = sqrt(1 - saturate(dot(normal.xy, normal.xy)));
+                // Specular
+                half4 specularTex = SAMPLE_TEXTURE2D(_SpecularTexture, sampler_MainTex, input.uv);
+                half3 specular = specularTex.rgb;
+                half smoothness = specularTex.a;
 
-            // Fresnel
-            float fresnel = tex2D(_FalloffTexture, IN.uv_MainTex)
-                * pow(1 - abs(dot(WorldNormalVector(IN, o.Normal), normalize(_WorldSpaceCameraPos - IN.worldPos))), _FresnelPower)
-                * _FresnelStrength;
+                // Normal Map
+                half4 normalMap = SAMPLE_TEXTURE2D(_NormalTexture, sampler_MainTex, input.uv);
+                half3 normalTS = UnpackNormalScale(normalMap, _NormalStrength);
+                half3 bitangent = cross(input.normalWS, input.tangentWS.xyz) * input.tangentWS.w;
+                half3x3 tangentToWorld = half3x3(input.tangentWS.xyz, bitangent, input.normalWS);
+                half3 normalWS = mul(normalTS, tangentToWorld);
+                normalWS = NormalizeNormalPerPixel(normalWS);
 
-            albedo += fixed4(fresnel, fresnel, fresnel, 0);
-            
-            o.Albedo = albedo;
+                // Fresnel
+                half3 viewDir = SafeNormalize(input.viewDirWS);
+                half fresnel = pow(1.0 - abs(dot(normalWS, viewDir)), _FresnelPower);
+                half4 falloff = SAMPLE_TEXTURE2D(_FalloffTexture, sampler_MainTex, input.uv);
+                half fresnelEffect = fresnel * _FresnelStrength * falloff.r;
+                albedo.rgb += fresnelEffect;
 
-            o.Specular = specular * albedo;
+                // Surface Data
+                SurfaceData surfaceData;
+                surfaceData.albedo = albedo.rgb;
+                surfaceData.metallic = 0.0h;
+                surfaceData.specular = specular;
+                surfaceData.smoothness = smoothness;
+                surfaceData.normalTS = normalTS;
+                surfaceData.emission = 0.0h;
+                surfaceData.occlusion = 1.0;
+                surfaceData.alpha = albedo.a;
+                surfaceData.clearCoatMask = 0.0h;
+                surfaceData.clearCoatSmoothness = 0.0h;
 
-            o.Smoothness = smoothness;
+                // Input Data
+                InputData inputData;
+                inputData.positionWS = input.positionWS;
+                inputData.normalWS = normalWS;
+                inputData.viewDirectionWS = viewDir;
+                inputData.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
+                inputData.fogCoord = 0.0;
+                inputData.vertexLighting = half3(0, 0, 0);
+                inputData.bakedGI = SampleSHPixel(input.vertexSH, inputData.normalWS);
+                inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(input.positionCS);
+                inputData.shadowMask = half4(1, 1, 1, 1);
 
-            o.Normal = normal;
+                // Final Color
+                half4 color = UniversalFragmentPBR(inputData, surfaceData);
 
-            o.Alpha = albedo.a;
+                return color;
+            }
+            ENDHLSL
         }
-        ENDCG
+
+        UsePass "Universal Render Pipeline/Lit/ShadowCaster"
+        UsePass "Universal Render Pipeline/Lit/DepthOnly"
+        UsePass "Universal Render Pipeline/Lit/Meta"
     }
-    FallBack "Diffuse"
+
+    FallBack "Universal Render Pipeline/Lit"
 }

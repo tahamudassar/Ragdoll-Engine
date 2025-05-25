@@ -38,7 +38,7 @@ namespace RagdollEngine
 
         public override bool Evaluate()
         {
-            if (!wasActive && !inputHandler.attack.pressed) return false;
+            if (!wasActive && !inputHandler.homingAttack.pressed) return false;
 
             if (wasActive) goto Home;
 
