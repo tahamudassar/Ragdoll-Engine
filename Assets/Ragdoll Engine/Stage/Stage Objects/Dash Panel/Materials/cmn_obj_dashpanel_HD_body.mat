@@ -15,7 +15,6 @@ Material:
   m_InvalidKeywords:
   - _METALLIC_LAYER_R
   - _NORMAL_TYPE_NONE
-  - _SMOOTHNESSCHANNEL_A
   - _SMOOTHNESS_LAYER_R
   - _USE_COLOR_TEXTURE
   - _USE_METALLIC_TEXTURE
@@ -170,6 +169,7 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _Metallic: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!114 &9034391560438770574
 MonoBehaviour:
   m_ObjectHideFlags: 11
