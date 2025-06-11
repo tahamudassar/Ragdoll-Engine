@@ -14,13 +14,28 @@ public class Player : MonoBehaviour
 
     [SerializeField] PlayerInput playerInput;
 
-    [SerializeField] Character character;
 
+    [SerializeField]
+    private Character character;
+
+    public Character CharacterInstance { get { return character; } }
     InputHandler inputHandler => character.inputHandler;
+
+    public static Player Instance { get; private set; }
+   
 
     void Awake()
     {
-        character.Initialize();
+        if(Instance == null)
+        {
+            Instance = this;
+            character.Initialize();
+        }
+        else
+        {
+            Destroy(this);
+        }
+       
     }
 
     void OnEnable()
