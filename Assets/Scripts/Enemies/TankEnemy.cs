@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TankEnemy : MonoBehaviour
+public class TankEnemy : MonoBehaviour, Hittable
 {
     private NavMeshAgent navmeshAgent;
     [SerializeField] private int maxHealth = 50;
@@ -29,11 +29,13 @@ public class TankEnemy : MonoBehaviour
     {
         Idle,
         Chasing,
-        Cooldown
+        Cooldown,
+        Death
     }
 
     private State state;
     public Action<State> OnStateChange;
+    public Action<float> OnDamage;
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -122,6 +124,7 @@ public class TankEnemy : MonoBehaviour
             if (dot >= attackAngleThreshold)
             {
                 Instantiate(projectilePrefab, attackPoint.position, attackPoint.rotation);
+                
                 attackCooldownTimer = attackCooldown;
                 navmeshAgent.destination = transform.position;
                 state = State.Cooldown;
@@ -142,5 +145,20 @@ public class TankEnemy : MonoBehaviour
     public float GetHealthNormalized()
     {
         return (float)currentHealth / (float)maxHealth;
+    }
+
+    public void DoHit(int damage)
+    {
+        currentHealth -= damage;
+        OnDamage?.Invoke(GetHealthNormalized());
+        if (currentHealth <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    HittableType Hittable.GetType()
+    {
+        return HittableType.Enemy;
     }
 }
