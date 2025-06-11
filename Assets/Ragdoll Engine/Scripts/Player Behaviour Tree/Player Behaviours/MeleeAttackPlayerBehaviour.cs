@@ -7,6 +7,7 @@ namespace RagdollEngine
     public class MeleeAttackPlayerBehaviour : PlayerBehaviour
     {
         [SerializeField] private Vector3 offsetVector;
+        [SerializeField] private int attackDamage = 50;
         [SerializeField] private float cooldown;
         private float cooldownTimer = 0;
         public Action OnFire;
@@ -34,9 +35,17 @@ namespace RagdollEngine
         private void Attack()
         {
             OnFire?.Invoke();
-            // Here you can implement the logic for melee attack, such as dealing damage to enemies
-            // For example, you might want to check for nearby enemies and apply damage to them.
-            Debug.Log("Melee attack executed at position: " + (character.transform.position + offsetVector));
+            //Overlapsphere with 2 radius in front of player,
+            Vector3 attackPosition = modelTransform.position + modelTransform.forward * 2f + offsetVector;
+            Collider[] hitColliders = Physics.OverlapSphere(attackPosition, 2f);
+            foreach (Collider hitCollider in hitColliders)
+            {
+                if (hitCollider.transform.TryGetComponent(out IHittable hittable))
+                {
+                    hittable.DoHit(attackDamage);
+                }
+            }
+            
         }
 
 

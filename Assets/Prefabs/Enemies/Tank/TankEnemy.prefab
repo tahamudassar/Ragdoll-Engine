@@ -73,9 +73,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4217044554899534283}
   - component: {fileID: 6737673574093368}
-  - component: {fileID: 5400540439105086486}
+  - component: {fileID: 7883734395668989075}
   - component: {fileID: 2155254507515507213}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TankEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,8 +121,8 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 3
---- !u!135 &5400540439105086486
-SphereCollider:
+--- !u!65 &7883734395668989075
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -140,8 +140,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2.99
-  m_Center: {x: 0, y: 1.11, z: 0}
+  m_Size: {x: 5.42, y: 3.6, z: 6.06}
+  m_Center: {x: 0, y: 1.35, z: 0}
 --- !u!114 &2155254507515507213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,6 +157,8 @@ MonoBehaviour:
   maxHealth: 50
   playerDetectionDistance: 30
   chaseDetectionDistance: 100
+  backupDistance: 10
+  backupSpeed: 10
   shootDistance: 20
   attackPoint: {fileID: 7489879909920357343}
   attackCooldown: 1

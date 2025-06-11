@@ -18302,6 +18302,7 @@ MonoBehaviour:
   minStompForce: 100
   maxStompForce: 300
   bounceMult: 51
+  bounceDamage: 50
   stompAccelerationTime: 5
 --- !u!114 &5827840037008628299
 MonoBehaviour:
@@ -19624,7 +19625,7 @@ MonoBehaviour:
   animator: {fileID: 2283653176813601083}
   layerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 513
   height: 1
   moveDeadzone: 5
   dynamicSolverIterations: 1

@@ -6,7 +6,7 @@ public enum HittableType
     Enemy,
     Obstacle
 }
-public interface Hittable
+public interface IHittable
 {
 
     public void DoHit(int damage);

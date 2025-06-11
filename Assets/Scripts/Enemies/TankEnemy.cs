@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TankEnemy : MonoBehaviour, Hittable
+public class TankEnemy : MonoBehaviour, IHittable
 {
     private NavMeshAgent navmeshAgent;
     [SerializeField] private int maxHealth = 50;
@@ -14,7 +14,8 @@ public class TankEnemy : MonoBehaviour, Hittable
 
     //Chasing State
     [SerializeField] private float chaseDetectionDistance=70;
-
+    [SerializeField] private float backupDistance;
+    [SerializeField] private float backupSpeed = 2f; // Speed at which the tank moves backwards when the player is too close
 
 
     //Shooting State
@@ -48,7 +49,7 @@ public class TankEnemy : MonoBehaviour, Hittable
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         TickCooldowns();
         switch (state)
@@ -70,12 +71,13 @@ public class TankEnemy : MonoBehaviour, Hittable
     {
         if (attackCooldownTimer > 0f)
         {
-            attackCooldownTimer -= Time.deltaTime;
+            attackCooldownTimer -= Time.fixedDeltaTime;
         }
     }
     private void Idle()
     {
-
+        navmeshAgent.destination = transform.position; // Stop moving during idle state
+        navmeshAgent.updateRotation = false; // Stop the NavMeshAgent from rotating during idle state
         Vector3 playerPos = Player.Instance.CharacterInstance.playerBehaviourTree.modelTransform.position;
         if (Vector3.SqrMagnitude(transform.position - playerPos) <= playerDetectionDistance * playerDetectionDistance)
         {
@@ -89,6 +91,7 @@ public class TankEnemy : MonoBehaviour, Hittable
         Vector3 playerPos = Player.Instance.CharacterInstance.playerBehaviourTree.modelTransform.position;
         //Set navmeshDestination to player
         navmeshAgent.destination = playerPos;
+        navmeshAgent.updateRotation = true; // Allow NavMeshAgent to rotate towards the player
 
         //Check if player is out of range
         float distance = Vector3.SqrMagnitude(transform.position - playerPos);
@@ -98,16 +101,24 @@ public class TankEnemy : MonoBehaviour, Hittable
             state = State.Idle;
             OnStateChange?.Invoke(state);
         }
+        //If player is too close then move backwards
+        else if (distance <= backupDistance* backupDistance)
+        {
+           
+            transform.position = transform.position - transform.forward * Time.fixedDeltaTime * backupSpeed; // Move backwards at a speed of 2 units per second
+            navmeshAgent.destination = transform.position; // Update the NavMeshAgent's destination to the new position
+            navmeshAgent.updateRotation = false; // Stop the NavMeshAgent from rotating while backing up
+        }
         //If player in shooting range then try to shoot
         else if (distance <= shootDistance * shootDistance)
         {
-            Shooting();
+            Shoot();
         }
 
       
     }
 
-    private void Shooting()
+    private void Shoot()
     {
         if (attackCooldownTimer <= 0f)
         {
@@ -119,8 +130,6 @@ public class TankEnemy : MonoBehaviour, Hittable
             //Get angle between playerDir and transform.forward
             float dot = Vector3.Dot(playerDir, transform.forward);
 
-            Debug.DrawLine(transform.position, transform.position+playerDir, Color.red, 1f);
-            print(dot);
             if (dot >= attackAngleThreshold)
             {
                 Instantiate(projectilePrefab, attackPoint.position, attackPoint.rotation);
@@ -136,9 +145,11 @@ public class TankEnemy : MonoBehaviour, Hittable
 
     private void Cooldown()
     {
+        navmeshAgent.updateRotation = false; // Stop the NavMeshAgent from rotating during cooldown
         if (attackCooldownTimer <= 0f)
         {
             state = State.Chasing;
+            navmeshAgent.updateRotation = true; // Resume rotation when not in cooldown
             OnStateChange?.Invoke(state);
         }
     }
@@ -157,7 +168,7 @@ public class TankEnemy : MonoBehaviour, Hittable
         }
     }
 
-    HittableType Hittable.GetType()
+    HittableType IHittable.GetType()
     {
         return HittableType.Enemy;
     }

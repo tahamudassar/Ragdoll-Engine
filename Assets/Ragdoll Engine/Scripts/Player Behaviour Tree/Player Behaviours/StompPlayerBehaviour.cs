@@ -11,8 +11,9 @@ namespace RagdollEngine
 
         [SerializeField] float maxStompForce;
         [SerializeField] float bounceMult = 10f;
-
+        [SerializeField] int bounceDamage = 50;
         [SerializeField] float stompAccelerationTime;
+        private Vector3 bouncePos;
 
         float stompAccelerationTimer;
         bool bounced = false;
@@ -47,6 +48,7 @@ namespace RagdollEngine
                 accelerationVector = Vector3.zero;
                 stickToGround = false;
                 bounced = true;
+                BounceAttack();
             }
             return stomping;
         }
@@ -58,6 +60,26 @@ namespace RagdollEngine
                 additiveVelocity = -RB.linearVelocity
                     + (-Vector3.up * Mathf.Lerp(minStompForce, maxStompForce, 1 - Mathf.Pow(10, -(1 - (stompAccelerationTimer / stompAccelerationTime)))));
             }
+        }
+        private void BounceAttack()
+        {
+            //Check if there are hittables within a sphere of 1m and damage them
+            Collider[] hitColliders = Physics.OverlapSphere(playerTransform.position, 2f);
+            foreach (Collider hitCollider in hitColliders)
+            {
+
+                if (hitCollider.transform.TryGetComponent(out IHittable hittable))
+                {
+                    print($"Hit {hittable} with bounce damage of {bounceDamage} at position {playerTransform.position}");
+                    hittable.DoHit(bounceDamage);
+                }
+            }
+            bouncePos = playerTransform.position;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.DrawSphere(bouncePos, 2f);
         }
     }
 }

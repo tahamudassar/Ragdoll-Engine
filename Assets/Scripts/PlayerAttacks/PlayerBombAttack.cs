@@ -41,6 +41,13 @@ public class PlayerBombAttack : MonoBehaviour
         //Check all layers except exclude layers
         LayerMask mask = ~excludeLayers;
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, attackRange,mask);
+        foreach (Collider hitCollider in hitColliders)
+        {
+            if (hitCollider.transform.TryGetComponent(out IHittable hittable))
+            {
+                hittable.DoHit(damage);
+            }
+        }
         Instantiate(bombParticles, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
