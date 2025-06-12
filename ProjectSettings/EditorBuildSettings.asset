@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Stages/Test Level/Test Level.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
   - enabled: 1
-    path: Assets/Stages/Levels/Level1/Level1.unity
+    path: Assets/Stages/Levels/World1/Level1/World1Level1.unity
     guid: 7a7731e3ec987ec49a255f6ec426c075
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0

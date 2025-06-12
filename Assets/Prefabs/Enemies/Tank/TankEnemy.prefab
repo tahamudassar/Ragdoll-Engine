@@ -164,6 +164,7 @@ MonoBehaviour:
   attackCooldown: 1
   attackAngleThreshold: 0.98
   projectilePrefab: {fileID: 3423488043099296501, guid: c10652d175359de47b155ee11b413fd0, type: 3}
+  deathEffect: {fileID: 1376617828620465841, guid: 78def02073f1ad7408a6c1cab3a41778, type: 3}
 --- !u!1001 &6312365038499976885
 PrefabInstance:
   m_ObjectHideFlags: 0

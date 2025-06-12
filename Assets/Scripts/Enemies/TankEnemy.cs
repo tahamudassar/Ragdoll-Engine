@@ -10,10 +10,10 @@ public class TankEnemy : MonoBehaviour, IHittable
     private int currentHealth;
 
     //Idle state
-    [SerializeField] private float playerDetectionDistance=30;
+    [SerializeField] private float playerDetectionDistance = 30;
 
     //Chasing State
-    [SerializeField] private float chaseDetectionDistance=70;
+    [SerializeField] private float chaseDetectionDistance = 70;
     [SerializeField] private float backupDistance;
     [SerializeField] private float backupSpeed = 2f; // Speed at which the tank moves backwards when the player is too close
 
@@ -26,17 +26,20 @@ public class TankEnemy : MonoBehaviour, IHittable
     [SerializeField] private float attackAngleThreshold = 0.7f;
     [SerializeField] private Transform projectilePrefab;
 
+    //Death state
+    [SerializeField] private Transform deathEffect;
+
     public enum State
     {
         Idle,
         Chasing,
-        Cooldown,
-        Death
+        Cooldown
     }
 
     private State state;
     public Action<State> OnStateChange;
     public Action<float> OnDamage;
+    public Action OnDeath;
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -45,7 +48,7 @@ public class TankEnemy : MonoBehaviour, IHittable
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        state = State.Idle;   
+        state = State.Idle;
     }
 
     // Update is called once per frame
@@ -102,9 +105,9 @@ public class TankEnemy : MonoBehaviour, IHittable
             OnStateChange?.Invoke(state);
         }
         //If player is too close then move backwards
-        else if (distance <= backupDistance* backupDistance)
+        else if (distance <= backupDistance * backupDistance)
         {
-           
+
             transform.position = transform.position - transform.forward * Time.fixedDeltaTime * backupSpeed; // Move backwards at a speed of 2 units per second
             navmeshAgent.destination = transform.position; // Update the NavMeshAgent's destination to the new position
             navmeshAgent.updateRotation = false; // Stop the NavMeshAgent from rotating while backing up
@@ -115,7 +118,7 @@ public class TankEnemy : MonoBehaviour, IHittable
             Shoot();
         }
 
-      
+
     }
 
     private void Shoot()
@@ -133,7 +136,7 @@ public class TankEnemy : MonoBehaviour, IHittable
             if (dot >= attackAngleThreshold)
             {
                 Instantiate(projectilePrefab, attackPoint.position, attackPoint.rotation);
-                
+
                 attackCooldownTimer = attackCooldown;
                 navmeshAgent.destination = transform.position;
                 state = State.Cooldown;
@@ -164,6 +167,11 @@ public class TankEnemy : MonoBehaviour, IHittable
         OnDamage?.Invoke(GetHealthNormalized());
         if (currentHealth <= 0)
         {
+            OnDeath?.Invoke();
+            if (deathEffect != null)
+            {
+                Instantiate(deathEffect, transform.position, Quaternion.identity);
+            }
             Destroy(gameObject);
         }
     }
