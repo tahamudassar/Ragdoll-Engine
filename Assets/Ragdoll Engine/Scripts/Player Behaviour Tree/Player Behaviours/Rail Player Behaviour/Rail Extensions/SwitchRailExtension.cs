@@ -40,7 +40,7 @@ namespace RagdollEngine
 
                 currentReverseCoyoteTime = 0;
 
-                SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline, Utility.DivideVector3(hit.point - railStageObject.splineContainer.transform.position, railStageObject.splineContainer.transform.lossyScale), out float3 _, out float currentT);
+                SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline,railStageObject.splineContainer.transform.InverseTransformPoint(hit.point), out float3 _, out float currentT);
 
                 t = currentT;
 

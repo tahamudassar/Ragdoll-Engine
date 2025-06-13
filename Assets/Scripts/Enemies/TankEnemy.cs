@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class TankEnemy : MonoBehaviour, IHittable
+public class TankEnemy : MonoBehaviour ,BaseEnemy
 {
     private NavMeshAgent navmeshAgent;
     [SerializeField] private int maxHealth = 50;
@@ -38,8 +38,20 @@ public class TankEnemy : MonoBehaviour, IHittable
 
     private State state;
     public Action<State> OnStateChange;
-    public Action<float> OnDamage;
-    public Action OnDeath;
+    private Action OnDeath;
+    private Action OnHit;
+    Action BaseEnemy.OnDeath
+    {
+        get => OnDeath;
+        set => OnDeath = value;
+    }
+
+    Action IHittable.OnHit
+    {
+        get => OnHit;
+        set => OnHit = value;
+    }
+
     private void Awake()
     {
         currentHealth = maxHealth;
@@ -81,7 +93,7 @@ public class TankEnemy : MonoBehaviour, IHittable
     {
         navmeshAgent.destination = transform.position; // Stop moving during idle state
         navmeshAgent.updateRotation = false; // Stop the NavMeshAgent from rotating during idle state
-        Vector3 playerPos = Player.Instance.CharacterInstance.playerBehaviourTree.modelTransform.position;
+        Vector3 playerPos = Player.CharacterInstance.playerBehaviourTree.modelTransform.position;
         if (Vector3.SqrMagnitude(transform.position - playerPos) <= playerDetectionDistance * playerDetectionDistance)
         {
             state = State.Chasing;
@@ -91,7 +103,7 @@ public class TankEnemy : MonoBehaviour, IHittable
 
     private void Chasing()
     {
-        Vector3 playerPos = Player.Instance.CharacterInstance.playerBehaviourTree.modelTransform.position;
+        Vector3 playerPos = Player.CharacterInstance.playerBehaviourTree.modelTransform.position;
         //Set navmeshDestination to player
         navmeshAgent.destination = playerPos;
         navmeshAgent.updateRotation = true; // Allow NavMeshAgent to rotate towards the player
@@ -127,7 +139,7 @@ public class TankEnemy : MonoBehaviour, IHittable
         {
             //Get playerpos and check if player is in a certain cone in front of tank using angles
             //If player is in cone launch attack directly from the tank attackPoint
-            Vector3 playerPos = Player.Instance.CharacterInstance.playerBehaviourTree.modelTransform.position;
+            Vector3 playerPos = Player.CharacterInstance.playerBehaviourTree.modelTransform.position;
             Vector3 playerDir = playerPos - transform.position;
             playerDir.Normalize();
             //Get angle between playerDir and transform.forward
@@ -164,7 +176,7 @@ public class TankEnemy : MonoBehaviour, IHittable
     public void DoHit(int damage)
     {
         currentHealth -= damage;
-        OnDamage?.Invoke(GetHealthNormalized());
+        OnHit?.Invoke();
         if (currentHealth <= 0)
         {
             OnDeath?.Invoke();
