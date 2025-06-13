@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.Splines;
 
 namespace RagdollEngine
 {
@@ -21,14 +22,15 @@ namespace RagdollEngine
 
             if (!railPlayerBehaviour || railPlayerBehaviour.rail) return false;
 
-            float3 point1 = Utility.DivideVector3(playerBehaviourTree.playerTransform.position - railStageObject.splineContainer.transform.position, railStageObject.splineContainer.transform.lossyScale);
+            float3 point1 = railStageObject.splineContainer.transform.InverseTransformPoint(playerBehaviourTree.playerTransform.position);
 
             Utility.GetNearestPoint(railStageObject.splineContainer.Spline,
                 point1,
                 p =>
                 {
-                    return Vector3.Dot(Vector3.Normalize(p - point1), playerBehaviourTree.modelTransform.forward) > viewDot
-                    && (p.y - point1.y) / maxDistance < maxHeight;
+                    //return Vector3.Dot(Vector3.Normalize(p - point1), playerBehaviourTree.modelTransform.forward) > viewDot
+                    //&& (p.y - point1.y) / maxDistance < maxHeight;
+                    return true;
                 },
                 out _, out float t, out bool success);
 

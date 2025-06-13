@@ -86,8 +86,8 @@ namespace RagdollEngine
                 }*/
 
                 if (railCooldown && railStageObject.splineContainer == splineContainer) return;
-
-                SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline, Utility.DivideVector3(/*hit.point*/ playerTransform.position - railStageObject.splineContainer.transform.position, railStageObject.splineContainer.transform.lossyScale), out float3 _, out t);
+                
+                SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline, railStageObject.splineContainer.transform.InverseTransformPoint(playerTransform.position), out float3 _, out t);
 
                 Vector3 pointTangent = ((Vector3)railStageObject.splineContainer.EvaluateTangent(t)).normalized;
 
@@ -222,7 +222,7 @@ namespace RagdollEngine
 
         public void Enter(RailStageObject railStageObject)
         {
-            SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline, Utility.DivideVector3(playerTransform.position - railStageObject.splineContainer.transform.position, railStageObject.splineContainer.transform.lossyScale), out float3 _, out t);
+            SplineUtility.GetNearestPoint(railStageObject.splineContainer.Spline,  railStageObject.splineContainer.transform.InverseTransformPoint(playerTransform.position), out float3 _, out t);
 
             splineContainer = railStageObject.splineContainer;
 

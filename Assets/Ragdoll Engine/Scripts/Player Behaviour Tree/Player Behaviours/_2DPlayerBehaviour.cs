@@ -45,7 +45,7 @@ namespace RagdollEngine
 
             SplineContainer thisSplineContainer = air ? airSplineContainer : splineContainer;
 
-            SplineUtility.GetNearestPoint(thisSplineContainer.Spline, Utility.DivideVector3(playerTransform.position - thisSplineContainer.transform.position, thisSplineContainer.transform.lossyScale), out float3 _, out float t);
+            SplineUtility.GetNearestPoint(thisSplineContainer.Spline, thisSplineContainer.transform.InverseTransformPoint(playerTransform.position), out float3 _, out float t);
 
             thisSplineContainer.Evaluate(t, out float3 nearest, out matrix.c2, out matrix.c1);
 

@@ -1584,6 +1584,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 2D 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5148817236446094103, guid: 153f0e3e4c995704085a67c069b32d4e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5176112112275844925, guid: 153f0e3e4c995704085a67c069b32d4e, type: 3}
       propertyPath: m_Name
       value: 2D 3
